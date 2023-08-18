@@ -14,6 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { User } from './entities/user.entity';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginResponse } from './interfaces/login-response';
 
@@ -48,9 +49,10 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('/check-token')
   checkToken(@Request() req: Request): LoginResponse {
+    const user = req['user'] as User;
     return {
-      user: req['user'],
-      token: this.authService.getJwtToken({ id: req['user'].id }),
+      user,
+      token: this.authService.getJwtToken({ id: user._id }),
     };
   }
 
@@ -72,4 +74,3 @@ export class AuthController {
 function token() {
   throw new Error('Function not implemented.');
 }
-
